@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>মাদ্রাসা ভর্তি ফর্ম</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #090c1a, #1a1035);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: white;
+    }
+
+    .form-container {
+      background: rgba(18, 24, 41, 0.85);
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.05);
+      max-width: 480px;
+      width: 100%;
+      transition: box-shadow 0.4s ease;
+    }
+
+    .form-container:hover {
+      box-shadow: 0 0 60px rgba(0, 255, 255, 0.3);
+    }
+
+    .form-container h2 {
+      text-align: center;
+      font-size: 30px;
+      margin-bottom: 30px;
+      text-shadow: 0 0 10px #00ffe5;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      font-size: 15px;
+      color: #cfd9ff;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px 15px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      background: #12151d;
+      color: white;
+      font-size: 15px;
+      transition: all 0.3s ease;
+      height: 50px;
+    }
+
+    input::placeholder {
+      color: #888;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: #2e90ff;
+      box-shadow: 0 0 8px #2e90ff;
+    }
+
+    select {
+      appearance: none;
+      background-image: url('data:image/svg+xml;utf8,<svg fill="white" height="18" viewBox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right 15px center;
+      background-size: 18px;
+      cursor: pointer;
+    }
+
+    select.open {
+      animation: slideFade 0.25s ease;
+    }
+
+    button {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(to right, #00ffe5, #0088ff);
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      color: black;
+      cursor: pointer;
+      transition: transform 0.3s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #00c4ff, #00ff9e);
+      transform: scale(1.03);
+    }
+
+    .success, .error {
+      padding: 12px;
+      margin-top: 15px;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .success {
+      background: rgba(0, 255, 200, 0.1);
+      color: #00ffcc;
+    }
+
+    .error {
+      background: rgba(255, 0, 0, 0.15);
+      color: #ff6b6b;
+    }
+
+    @keyframes slideFade {
+      from {
+        opacity: 0;
+        transform: translateY(-6px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>🌟 মাদ্রাসা ভর্তি ফর্ম</h2>
+    <form id="madForm">
+      <label for="name">পূর্ণ নাম:</label>
+      <input type="text" id="name" name="name" placeholder="আপনার নাম লিখুন" required />
+
+      <label for="dob">জন্ম তারিখ:</label>
+      <input type="date" id="dob" name="dob" required />
+
+      <label for="class">ভর্তি শ্রেণী:</label>
+      <select id="class" name="class" required>
+        <option value="">একটি নির্বাচন করুন</option>
+        <option value="হিফজ">হিফজ</option>
+        <option value="নূরানি">নূরানি</option>
+        <option value="নাজেরা">নাজেরা</option>
+        <option value="১ম শ্রেণী">১ম শ্রেণী</option>
+        <option value="২য় শ্রেণী">২য় শ্রেণী</option>
+      </select>
+
+      <label for="mobile">মোবাইল নম্বর:</label>
+      <input type="tel" id="mobile" name="mobile" placeholder="01xxxxxxxxx" required />
+
+      <label for="email">ইমেইল ঠিকানা (ঐচ্ছিক):</label>
+      <input type="email" id="email" name="email" placeholder="example@gmail.com" />
+
+      <button type="submit">✅ সাবমিট করুন</button>
+      <div id="responseMsg"></div>
+    </form>
+  </div>
+
+  <script>
+    const form = document.getElementById("madForm");
+    const msg = document.getElementById("responseMsg");
+    const sel = document.getElementById("class");
+
+    // শ্রেণী select এনিমেশন
+    sel.addEventListener("mousedown", () => sel.classList.add("open"));
+    sel.addEventListener("blur", () => sel.classList.remove("open"));
+
+    // তারিখ ফরম্যাটার
+    function formatDate(ds) {
+      const [y, m, d] = ds.split("-");
+      return `${d}/${m}/${y}`;
+    }
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const formData = {
+        name: form.name.value,
+        dob: formatDate(form.dob.value),
+        class: form.class.value,
+        mobile: form.mobile.value,
+        email: form.email.value || "N/A"
+      };
+
+      // ✅ নিচের URL-এ তোমার Google Apps Script লিংক বসাও
+      fetch("https://script.google.com/macros/s/AKfycbzMfix2jCgRPExT-3twkbNQ_6Xx3wjZO94KwTgGaUDWa3XD4uTC3Kp2qCwMVf6D-lYn/exec", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
+      })
+      .then(res => res.text())
+      .then(data => {
+        msg.innerHTML = "<div class='success'>✅ সফলভাবে ফর্ম জমা হয়েছে!</div>";
+        form.reset();
+      })
+      .catch(err => {
+        msg.innerHTML = "<div class='error'>❌ জমা দিতে সমস্যা হয়েছে!</div>";
+        console.error(err);
+      });
+    });
+  </script>
+</body>
+</html>
